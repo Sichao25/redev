@@ -8,12 +8,11 @@ on:
   
 jobs:
   build:
-
     runs-on: macos-latest
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@4
+      uses: actions/checkout@v4
     
     - name: Set up Python
       uses: actions/setup-python@v4
