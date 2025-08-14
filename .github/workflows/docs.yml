@@ -2,9 +2,9 @@ name: Docs
 
 on:
   push:
-    branches: [ main ]
+    branches: [ yus/doc_test ]
   pull_request:
-    branches: [ main ]
+    branches: [ yus/doc_test ]
   
 jobs:
   build:
@@ -13,10 +13,19 @@ jobs:
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@1.0.0
+      uses: actions/checkout@3.0.0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
     - name: Requirements
-      run: brew install doxygen
-        && pip3 install -r docsDoxySphinx/requirements.txt
+      run: |
+        brew install doxygen
+        pip3 install -r docsDoxySphinx/requirements.txt
+    
     - name: Build docs
-      run: cd docsDoxySphinx
-        && make html
+      run: |
+        cd docsDoxySphinx
+        make html
