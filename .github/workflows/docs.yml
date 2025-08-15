@@ -24,7 +24,8 @@ jobs:
     
     - name: Requirements
       run: |
-        brew install doxygen
+        sudo apt-get update
+        sudo apt-get install doxygen
         pip3 install -r docsDoxySphinx/requirements.txt
     
     - name: Build docs
