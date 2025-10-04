@@ -1,7 +1,7 @@
 name: build-test-analyze
 on:
   push:
-    branches: [ main ]
+    branches: [ main, workflow-test ]
   pull_request:
     branches: [ main ]
   schedule:
@@ -64,17 +64,20 @@ jobs:
       if: steps.restore-adios2.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{runner.workspace}}/build-adios2
-      run: /usr/bin/cmake $GITHUB_WORKSPACE/adios2
-           -DCMAKE_CXX_COMPILER=mpicxx
-           -DCMAKE_CC_COMPILER=mpicc
-           -DADIOS2_USE_MPI=ON
-           -DADIOS2_USE_CUDA=OFF 
-           -DADIOS2_BUILD_EXAMPLES=OFF 
-           -DBUILD_TESTING=OFF
-           -DADIOS2_USE_Fortran=OFF
-           -DADIOS2_USE_SST=ON
-           -DADIOS2_INSTALL_GENERATE_CONFIG=OFF
-           -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-adios2/install
+      run: |
+           ls -la $GITHUB_WORKSPACE/adios2
+           ls -la $GITHUB_WORKSPACE/adios2/thirdparty
+           /usr/bin/cmake $GITHUB_WORKSPACE/adios2 \
+            -DCMAKE_CXX_COMPILER=mpicxx \
+            -DCMAKE_CC_COMPILER=mpicc \
+            -DADIOS2_USE_MPI=ON \
+            -DADIOS2_USE_CUDA=OFF \
+            -DADIOS2_BUILD_EXAMPLES=OFF \
+            -DBUILD_TESTING=OFF \
+            -DADIOS2_USE_Fortran=OFF \
+            -DADIOS2_USE_SST=ON \
+            -DADIOS2_INSTALL_GENERATE_CONFIG=OFF \
+            -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-adios2/install
 
     - name: ADIOS2 Build
       if: steps.restore-adios2.outputs.cache-hit != 'true'
