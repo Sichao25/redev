@@ -91,6 +91,9 @@ jobs:
         path: ${{runner.workspace}}/build-adios2/install
         key: ${{ steps.restore-adios2.outputs.cache-primary-key }}
 
+    - name: perfstubs Create Build Environment
+      run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-perfstubs
+
     - name: Restore perfstubs
       id: restore-perfstubs
       uses: actions/cache/restore@v3
