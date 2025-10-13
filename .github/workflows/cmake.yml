@@ -124,6 +124,9 @@ jobs:
       run: |
         /usr/bin/cmake --build . --parallel 2
         /usr/bin/cmake --install .
+        ls -la
+        ls -la ${{runner.workspace}}/build-perfstubs/install
+        ls -la ${{runner.workspace}}/build-perfstubs/install/lib
 
     - name: Save perfstubs
       id: save-perfstubs
@@ -150,7 +153,7 @@ jobs:
            -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/
            -DADIOS2_HAVE_SST=ON
            -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls
-           -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/perfstubs/
+           -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/
            -DBUILD_TESTING=ON
 
     # Initializes the CodeQL tools for scanning.  This must be done before the code is built.
