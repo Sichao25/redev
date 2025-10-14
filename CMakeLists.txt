@@ -91,7 +91,7 @@ if(BUILD_TESTING)
     removeAdiosFiles(${TESTNAME}_cleanup)
     add_test(
       NAME ${TESTNAME}
-      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${PROCS} ${VALGRIND} ${VALGRIND_ARGS} ${EXE} ${ARGN}
+      COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} ${PROCS} ${EXE} ${ARGN}
     )
   endfunction(mpi_test)
 
