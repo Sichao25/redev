@@ -36,7 +36,6 @@ jobs:
         sudo apt-get install -yq cmake
         cmake --version
         /usr/bin/cmake --version
-        cmake -LAH build/ | grep -i mpi
 
     - name: Install mpi
       run: |
