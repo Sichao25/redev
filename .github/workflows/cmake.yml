@@ -27,7 +27,7 @@ jobs:
     env:
       MPICH_CC: ${{matrix.compiler.CC}}
       MPICH_CXX: ${{matrix.compiler.CXX}}
-      adios_version: v2.9.0
+      adios_version: v2.10.2
 
     steps:
     - name: Install CMake
@@ -63,8 +63,6 @@ jobs:
       shell: bash
       working-directory: ${{runner.workspace}}/build-adios2
       run: /usr/bin/cmake $GITHUB_WORKSPACE/adios2
-           -DCMAKE_CXX_COMPILER=mpicxx
-           -DCMAKE_CC_COMPILER=mpicc
            -DADIOS2_USE_MPI=ON
            -DADIOS2_USE_CUDA=OFF 
            -DADIOS2_BUILD_EXAMPLES=OFF 
@@ -143,6 +141,7 @@ jobs:
       run: /usr/bin/cmake $GITHUB_WORKSPACE/redev
            -DCMAKE_CXX_COMPILER=mpicxx
            -DCMAKE_CC_COMPILER=mpicc
+           -DMPIEXEC_EXECUTABLE=$(which mpirun)
            -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
            -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/
            -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls
