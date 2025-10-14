@@ -160,9 +160,9 @@ jobs:
       shell: bash
       run: |
         ctest -N -V
-        mpiexec -n 2 --host localhost ./test_classPtnGather
-        mpiexec -n 2 ./test_classPtnGather
         ctest --output-on-failure
+        export HYDRA_LAUNCHER=fork
+        mpiexec -n 2 --host localhost ./test_classPtnGather
       
     #- name: Perform CodeQL Analysis
     #  uses: github/codeql-action/analyze@v2
