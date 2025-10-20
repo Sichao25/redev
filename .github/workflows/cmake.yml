@@ -153,6 +153,9 @@ jobs:
         which mpirun
         mpirun --version
         mpiexec --version
+        echo $LD_LIBRARY_PATH
+        echo $PATH
+        echo $CmMAKE_PREFIX_PATH
 
     - name: Redev Configure CMake
       working-directory: ${{runner.workspace}}/build-redev
