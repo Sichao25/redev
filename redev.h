@@ -1,11 +1,11 @@
 #pragma once
+#include <mpi.h>
 #include "redev_assert.h"
 #include "redev_comm.h"
 #include "redev_strings.h"
 #include "redev_types.h"
 #include <adios2.h>
 #include <array> // std::array
-#include <mpi.h>
 #include <optional>
 #include <utility>
 #include <variant>
