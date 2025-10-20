@@ -154,18 +154,19 @@ jobs:
     - name: Redev Configure CMake
       working-directory: ${{runner.workspace}}/build-redev
       run: |
-        cd $GITHUB_WORKSPACE/redev
-        rm -rf CMakeCache.txt CMakeFiles/
-        cd ${{runner.workspace}}/build-redev
+        mpicxx -v
+        mpicc -v
+        mpirun --version
+        mpiexec --version
         /usr/bin/cmake $GITHUB_WORKSPACE/redev \
-           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-           -DCMAKE_CC_COMPILER=$(which mpicc) \
-           -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
-           -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
-           -DADIOS2_HAVE_SST=ON \
-           -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls \
-           -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/ \
-           -DBUILD_TESTING=ON
+          -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+          -DCMAKE_CC_COMPILER=$(which mpicc) \
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
+          -DADIOS2_HAVE_SST=ON \
+          -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls \
+          -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/ \
+          -DBUILD_TESTING=ON
 
     # Initializes the CodeQL tools for scanning.  This must be done before the code is built.
     #- name: Initialize CodeQL
