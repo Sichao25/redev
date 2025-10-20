@@ -44,6 +44,8 @@ jobs:
         which mpicxx
         mpicc -v
         mpicxx -v
+        sudo update-alternatives --config mpicxx
+        sudo update-alternatives --config mpicc
     - name: ADIOS2 Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-adios2
 
@@ -140,8 +142,14 @@ jobs:
     - name: Redev Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-redev
 
+    - name: Show mpicxx version
+      run: |
+        mpicxx -v
+        mpicc -v
+        sudo update-alternatives --config mpicxx
+        sudo update-alternatives --config mpicc
+
     - name: Redev Configure CMake
-      shell: bash
       working-directory: ${{runner.workspace}}/build-redev
       run: /usr/bin/cmake $GITHUB_WORKSPACE/redev
            -DCMAKE_CXX_COMPILER=mpicxx
