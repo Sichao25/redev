@@ -44,7 +44,10 @@ jobs:
         which mpicxx
         mpicc -v
         mpicxx -v
-        mpicxx --show
+        which mpiexec
+        which mpirun
+        mpirun --version
+        mpiexec --version
     - name: ADIOS2 Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-adios2
 
@@ -146,7 +149,10 @@ jobs:
       run: |
         mpicxx -v
         mpicc -v
-        mpicxx --show
+        which mpiexec
+        which mpirun
+        mpirun --version
+        mpiexec --version
 
     - name: Redev Configure CMake
       working-directory: ${{runner.workspace}}/build-redev
