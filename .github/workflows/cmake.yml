@@ -154,10 +154,9 @@ jobs:
     - name: Redev Configure CMake
       working-directory: ${{runner.workspace}}/build-redev
       run: |
-        mpicxx -v
-        mpicc -v
-        mpirun --version
-        mpiexec --version
+        /usr/bin/mpicxx --version
+        /usr/bin/mpicc --version
+        update-alternatives --display mpi
         /usr/bin/cmake $GITHUB_WORKSPACE/redev \
           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
           -DCMAKE_CC_COMPILER=$(which mpicc) \
