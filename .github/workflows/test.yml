@@ -82,6 +82,8 @@ jobs:
       working-directory: ${{runner.workspace}}/build-redev
       run: |
         ls -la /usr/bin
+        which mpicc
+        which mpic++
         cmake $GITHUB_WORKSPACE/redev \
           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
           -DCMAKE_CC_COMPILER=$(which mpicc) \
@@ -95,7 +97,7 @@ jobs:
     - name: Build redev
       working-directory: ${{runner.workspace}}/build-redev
       run: |
-        cmake --build ${{runner.workspace}}/build-redev --target install -j 8
+        cmake --build ${{runner.workspace}}/build-redev
 
     - name: Run Tests
       working-directory: ${{runner.workspace}}/build-redev
