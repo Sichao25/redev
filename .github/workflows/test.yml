@@ -20,8 +20,6 @@ jobs:
     - name: Install mpi
       run: sudo apt-get install -yq mpich libmpich-dev cmake
 
-    - uses: actions/checkout@v4
-
     - name: ADIOS2 Checkout repo
       uses: actions/checkout@v4
       with:
@@ -74,15 +72,24 @@ jobs:
     
     - name: Create redev Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build-redev
+    
+    - name: Redev Checkout repo
+      uses: actions/checkout@v3
+      with:
+        path: redev
 
     - name: Configure redev
       working-directory: ${{runner.workspace}}/build-redev
       run: |
-        cmake $GITHUB_WORKSPACE \
-          -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-redev/install \
-          -DCMAKE_CXX_COMPILER=mpicxx \
-          -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/ADIOS2 \
-          -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/perfstubs
+        cmake $GITHUB_WORKSPACE/redev \
+          -DCMAKE_CXX_COMPILER=$(which mpicxx) \
+          -DCMAKE_CC_COMPILER=$(which mpicc) \
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
+          -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
+          -DADIOS2_HAVE_SST=ON \
+          -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls \
+          -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/ \
+          -DBUILD_TESTING=ON
     
     - name: Build redev
       working-directory: ${{runner.workspace}}/build-redev

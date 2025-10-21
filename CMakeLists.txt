@@ -14,6 +14,7 @@ if(ENABLE_ASAN AND CMAKE_COMPILER_IS_GNUCXX MATCHES 1)
   set(HAS_ASAN ON)
 endif()
 
+set(MPI_CXX_SKIP_MPICXX ON)
 find_package(MPI REQUIRED)
 #adios2 adds C and Fortran depending on how it was built
 find_package(ADIOS2 CONFIG 2.7.1 REQUIRED)
