@@ -63,7 +63,8 @@ jobs:
       run: |
         cmake $GITHUB_WORKSPACE/perfstubs \
           -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-perfstubs/install \
-          -DCMAKE_CXX_COMPILER=mpicxx
+          -DCMAKE_CXX_COMPILER=mpicxx \
+          -DCMAKE_C_COMPILER=mpicc
     
     - name: Build perfstubs
       working-directory: ${{runner.workspace}}/build-perfstubs
