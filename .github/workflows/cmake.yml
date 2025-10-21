@@ -139,6 +139,7 @@ jobs:
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-redev
 
     - name: Show mpicxx version
+      shell: bash
       working-directory: ${{runner.workspace}}/build-redev
       run: |
         mpicxx -v
@@ -152,6 +153,7 @@ jobs:
         echo $CMAKE_PREFIX_PATH
 
     - name: Redev Configure CMake
+      shell: bash
       working-directory: ${{runner.workspace}}/build-redev
       run: |
         /usr/bin/mpicxx --version
