@@ -39,7 +39,7 @@ jobs:
     - name: Install mpi
       run: |
         sudo apt-get update -yq
-        sudo apt-get install -yq mpich libmpich-dev
+        sudo apt-get install -yq mpich
         which mpicc
         which mpicxx
         mpicc -v
@@ -162,7 +162,7 @@ jobs:
         /usr/bin/cmake $GITHUB_WORKSPACE/redev \
           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
           -DCMAKE_CC_COMPILER=$(which mpicc) \
-          -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+          -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
           -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
           -DADIOS2_HAVE_SST=ON \
           -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls \
