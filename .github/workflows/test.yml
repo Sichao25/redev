@@ -20,6 +20,58 @@ jobs:
     - name: Install mpi
       run: sudo apt-get install -yq mpich libmpich-dev cmake
 
+    - name: Kokkos Checkout repo
+      uses: actions/checkout@v3
+      with:
+        repository: kokkos/kokkos
+    
+    - name: Kokkos Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build-kokkos
+    
+    - name: Configure Kokkos
+      working-directory: ${{runner.workspace}}/build-kokkos
+      run: |
+        cmake $GITHUB_WORKSPACE/kokkos \
+          -DCMAKE_CXX_STANDARD=17 \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DKokkos_ENABLE_SERIAL=ON \
+          -DKokkos_ENABLE_OPENMP=OFF \
+          -DKokkos_ENABLE_CUDA=OFF \
+          -DKokkos_ENABLE_CUDA_LAMBDA=OFF \
+          -DKokkos_ENABLE_CUDA_CONSTEXPR=OFF
+    
+    - name: Build Kokkos
+      working-directory: ${{runner.workspace}}/build-kokkos
+      run: |
+        cmake --build ${{runner.workspace}}/build-kokkos --target install -j 8
+    
+    - name: Omega_h Checkout repo
+      uses: actions/checkout@v3
+      with:
+        repository: SCOREC/omega_h
+  
+    - name: Omega_h Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build-omega_h
+    
+    - name: Configure Omega_h
+      working-directory: ${{runner.workspace}}/build-omega_h
+      run: |
+        cmake $GITHUB_WORKSPACE/omega_h \
+          -DCMAKE_CXX_COMPILER=`which mpicxx`
+          -DCMAKE_C_COMPILER=`which mpicc`
+          -DBUILD_SHARED_LIBS=OFF
+          -DOmega_h_USE_MPI=ON
+          -DOmega_h_USE_Kokkos=ON
+          -DBUILD_TESTING=OFF
+          -DMPIEXEC_EXECUTABLE=`which mpirun`
+          -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-omega_h/install \
+          -DKokkos_DIR=${{runner.workspace}}/build-kokkos/install/lib/cmake/Kokkos
+    
+    - name: Build Omega_h
+      working-directory: ${{runner.workspace}}/build-omega_h
+      run: |
+        cmake --build ${{runner.workspace}}/build-omega_h --target install -j 8
+
     - name: ADIOS2 Checkout repo
       uses: actions/checkout@v4
       with:
@@ -94,6 +146,7 @@ jobs:
           -DADIOS2_HAVE_SST=ON \
           -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls \
           -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/ \
+          -DOmega_h_DIR=${{runner.workspace}}/build-omega_h/install/lib/cmake/Omega_h/ \
           -DBUILD_TESTING=ON
     
     - name: Build redev
