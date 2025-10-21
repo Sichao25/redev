@@ -51,7 +51,7 @@ set(REDEV_SOURCES
 add_library(redev ${REDEV_SOURCES})
 target_compile_features(redev PUBLIC cxx_std_17)
 target_link_libraries(redev PRIVATE redev_git_version)
-target_link_libraries(redev PUBLIC MPI::MPI_C perfstubs)
+target_link_libraries(redev PUBLIC adios2::adios2 MPI::MPI_C perfstubs)
 target_compile_options(redev PRIVATE -Werror=switch)
 if(HAS_ASAN)
   target_compile_options(redev PRIVATE -fsanitize=address -fno-omit-frame-pointer)
