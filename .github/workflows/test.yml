@@ -27,6 +27,9 @@ jobs:
       with:
         repository: ornladios/adios2
         path: adios2
+    
+    - name: ADIOS2 Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build-adios2
 
     - name: Configure ADIOS2
       working-directory: ${{runner.workspace}}/build-adios2
@@ -53,6 +56,9 @@ jobs:
       with:
         repository: UO-OACISS/perfstubs
         path: perfstubs
+
+    - name: perfstubs Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build-perfstubs
     
     - name: Configure perfstubs
       working-directory: ${{runner.workspace}}/build-perfstubs
