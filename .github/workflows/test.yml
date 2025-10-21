@@ -1,0 +1,87 @@
+name: build-test-analyze
+on:
+  push:
+    branches: [ yus/add_perfstubs ]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    defaults:
+      run:
+        shell: bash
+      
+    steps:
+
+    - name: Update packages
+      run: sudo apt-get update
+
+    - name: Install mpi
+      run: sudo apt-get install -yq mpich libmpich-dev cmake
+
+    - uses: actions/checkout@v4
+
+    - name: ADIOS2 Checkout repo
+      uses: actions/checkout@v4
+      with:
+        repository: ornladios/adios2
+        path: adios2
+
+    - name: Configure ADIOS2
+      working-directory: ${{runner.workspace}}/build-adios2
+      run: |
+        cmake $GITHUB_WORKSPACE/adios2 \
+          -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-adios2/install \
+          -DCMAKE_CXX_COMPILER=mpicxx \
+          -DCMAKE_CC_COMPILER=mpicc \
+          -DADIOS2_USE_MPI=ON \
+          -DADIOS2_USE_CUDA=OFF \
+          -DADIOS2_BUILD_EXAMPLES=OFF \
+          -DBUILD_TESTING=OFF \
+          -DADIOS2_USE_Fortran=OFF \
+          -DADIOS2_USE_SST=ON \
+          -DADIOS2_INSTALL_GENERATE_CONFIG=OFF
+    
+    - name: Build ADIOS2
+      working-directory: ${{runner.workspace}}/build-adios2
+      run: |
+        cmake --build ${{runner.workspace}}/build-adios2 --target install -j 8
+    
+    - name: perfstubs Checkout repo
+      uses: actions/checkout@v3
+      with:
+        repository: UO-OACISS/perfstubs
+        path: perfstubs
+    
+    - name: Configure perfstubs
+      working-directory: ${{runner.workspace}}/build-perfstubs
+      run: |
+        cmake $GITHUB_WORKSPACE/perfstubs \
+          -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-perfstubs/install \
+          -DCMAKE_CXX_COMPILER=mpicxx
+    
+    - name: Build perfstubs
+      working-directory: ${{runner.workspace}}/build-perfstubs
+      run: |
+        cmake --build ${{runner.workspace}}/build-perfstubs --target install -j 8
+
+    - name: Configure redev
+      working-directory: ${{runner.workspace}}/build-redev
+      run: |
+        cmake $GITHUB_WORKSPACE \
+          -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-redev/install \
+          -DCMAKE_CXX_COMPILER=mpicxx \
+          -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/ADIOS2 \
+          -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/perfstubs
+    
+    - name: Build redev
+      working-directory: ${{runner.workspace}}/build-redev
+      run: |
+        cmake --build ${{runner.workspace}}/build-redev --target install -j 8
+
+    - name: Run Tests
+      working-directory: ${{runner.workspace}}/build-redev
+      run: |
+        ctest --output-on-failure
+        
