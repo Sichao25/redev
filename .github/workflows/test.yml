@@ -81,6 +81,7 @@ jobs:
     - name: Configure redev
       working-directory: ${{runner.workspace}}/build-redev
       run: |
+        ls -la usr/bin
         cmake $GITHUB_WORKSPACE/redev \
           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
           -DCMAKE_CC_COMPILER=$(which mpicc) \
