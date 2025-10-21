@@ -18,9 +18,7 @@ jobs:
       run: sudo apt-get update
 
     - name: Install mpi
-      run: |
-        sudo apt-cache search mpich
-        sudo apt-get install -yq mpich=4.3.2 cmake
+      run: sudo apt-get install -yq mpich libmpich-dev cmake
 
     - name: ADIOS2 Checkout repo
       uses: actions/checkout@v4
