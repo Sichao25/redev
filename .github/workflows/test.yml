@@ -71,6 +71,9 @@ jobs:
       working-directory: ${{runner.workspace}}/build-perfstubs
       run: |
         cmake --build ${{runner.workspace}}/build-perfstubs --target install -j 8
+    
+    - name: Create redev Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build-redev
 
     - name: Configure redev
       working-directory: ${{runner.workspace}}/build-redev
