@@ -88,6 +88,7 @@ jobs:
         cmake $GITHUB_WORKSPACE/redev \
           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
           -DCMAKE_C_COMPILER=$(which mpicc) \
+          -DMPIEXEC_EXECUTABLE=$(which mpirun) \
           -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
           -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
           -DADIOS2_HAVE_SST=ON \
