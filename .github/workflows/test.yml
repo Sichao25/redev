@@ -24,6 +24,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: kokkos/kokkos
+        path: kokkos
     
     - name: Kokkos Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build-kokkos
@@ -49,6 +50,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: SCOREC/omega_h
+        path: omega_h
   
     - name: Omega_h Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build-omega_h
