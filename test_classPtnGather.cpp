@@ -1,4 +1,5 @@
 #include "redev.h"
+#include "Omega_h_library.hpp"
 
 //less typing...
 using MdlEntVec = redev::ClassPtn::ModelEntVec;
