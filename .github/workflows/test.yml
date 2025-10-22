@@ -1,11 +1,11 @@
 name: mpi test
 on:
   push:
-    branches: [ main ]
+    branches: [ main, yus/add_perfstubs ]
 
 jobs:
   test-build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
 
     defaults:
