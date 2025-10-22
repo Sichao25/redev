@@ -47,8 +47,8 @@ void test3(const int rank, const EntToRank& expectedE2R) {
 }
 
 int main(int argc, char** argv) {
-  int rank, nproc;
   MPI_Init(&argc, &argv);
+  int rank, nproc;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &nproc);
   fprintf(stderr,"rank %d of %d running %s\n",rank,nproc,argv[0]);
