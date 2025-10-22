@@ -45,7 +45,7 @@ jobs:
     - name: Build Kokkos
       working-directory: ${{runner.workspace}}/build-kokkos
       run: |
-        cmake --build ${{runner.workspace}}/build-kokkos --target ${{runner.workspace}}/build-kokkos/install -j 8
+        sudo cmake --build ${{runner.workspace}}/build-kokkos --target install -j 8
     
     - name: Omega_h Checkout repo
       uses: actions/checkout@v3
@@ -73,7 +73,7 @@ jobs:
     - name: Build Omega_h
       working-directory: ${{runner.workspace}}/build-omega_h
       run: |
-        cmake --build ${{runner.workspace}}/build-omega_h --target ${{runner.workspace}}/build-omega_h/install -j 8
+        sudo cmake --build ${{runner.workspace}}/build-omega_h --target install -j 8
 
     - name: ADIOS2 Checkout repo
       uses: actions/checkout@v4
@@ -102,7 +102,7 @@ jobs:
     - name: Build ADIOS2
       working-directory: ${{runner.workspace}}/build-adios2
       run: |
-        cmake --build ${{runner.workspace}}/build-adios2 --target ${{runner.workspace}}/build-adios2/install -j 8
+        cmake --build ${{runner.workspace}}/build-adios2 --target install -j 8
     
     - name: perfstubs Checkout repo
       uses: actions/checkout@v3
@@ -124,7 +124,7 @@ jobs:
     - name: Build perfstubs
       working-directory: ${{runner.workspace}}/build-perfstubs
       run: |
-        cmake --build ${{runner.workspace}}/build-perfstubs --target ${{runner.workspace}}/build-perfstubs/install -j 8
+        cmake --build ${{runner.workspace}}/build-perfstubs --target install -j 8
     
     - name: Create redev Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build-redev
