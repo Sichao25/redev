@@ -1,7 +1,7 @@
 name: build-test-analyze
 on:
   push:
-    branches: [ main, yus/add_perfstubs ]
+    branches: [ main ]
   pull_request:
     branches: [ main ]
   schedule:
