@@ -49,7 +49,6 @@ void test3(const int rank, const EntToRank& expectedE2R) {
 int main(int argc, char** argv) {
   auto lib = Omega_h::Library(&argc, &argv);
   const auto world = lib.world();
-  int rank, nproc;
   const int rank = world->rank();
   const int nproc = world->size();
   std::cout << "Rank " << rank << " / " << nproc << std::endl;
