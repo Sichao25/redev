@@ -1,0 +1,22 @@
+name: mpi test
+on:
+  push:
+    branches: [ yus/add_perfstubs ]
+
+jobs:
+  mpi-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install MPICH
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mpich
+      - name: Build MPI program
+        run: |
+          ls -la
+          mpicc test_mpi.c -o test_mpi
+      - name: Run MPI
+        run: |
+          export HYDRA_LAUNCHER=fork
+          mpirun -n 2 ./test_mpi
