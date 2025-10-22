@@ -51,6 +51,7 @@ int main(int argc, char** argv) {
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &nproc);
+  fprintf(stderr,"rank %d of %d running %s\n",rank,nproc,argv[0]);
   REDEV_ALWAYS_ASSERT(nproc == 2);
 
   //expected result
