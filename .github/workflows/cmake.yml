@@ -1,7 +1,7 @@
 name: build-test-analyze
 on:
   push:
-    branches: [ main ]
+    branches: [ main, yus/add_perfstubs ]
   pull_request:
     branches: [ main ]
   schedule:
@@ -13,7 +13,7 @@ on:
 jobs:
   buildTestAnalyze:
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         compiler:
@@ -38,10 +38,10 @@ jobs:
         cmake --version
         /usr/bin/cmake --version
 
-    - name: Setup MPI
-      uses: mpi4py/setup-mpi@v1
-      with:
-        mpi: mpich
+    - name: Install MPICH
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mpich libmpich-dev
 
     - name: ADIOS2 Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-adios2
