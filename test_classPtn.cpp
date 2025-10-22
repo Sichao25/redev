@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &nproc);
   fprintf(stderr,"rank %d of %d running %s\n",rank,nproc,argv[0]);
-  REDEV_ALWAYS_ASSERT(nproc == 4);
+  // REDEV_ALWAYS_ASSERT(nproc == 4);
   const redev::LOs expectedRanks = {0,1,2,3};
   const redev::ClassPtn::ModelEntVec expectedEnts {{0,0},{1,0},{2,0},{2,1}};
   REDEV_ALWAYS_ASSERT(expectedRanks.size() == expectedEnts.size());

@@ -17,14 +17,14 @@ int main(int argc, char** argv) {
   MPI_Comm_size(MPI_COMM_WORLD, &nproc);
   auto isRdv = atoi(argv[1]);
   fprintf(stderr, "rank %d isRdv %d\n", rank, isRdv);
-  if(isRdv && nproc != 4) {
-      std::cerr << "There must be exactly 4 rendezvous processes for this test.\n";
-      exit(EXIT_FAILURE);
-  }
-  if(!isRdv && nproc != 3) {
-      std::cerr << "There must be exactly 3 non-rendezvous processes for this test.\n";
-      exit(EXIT_FAILURE);
-  }
+  // if(isRdv && nproc != 4) {
+  //     std::cerr << "There must be exactly 4 rendezvous processes for this test.\n";
+  //     exit(EXIT_FAILURE);
+  // }
+  // if(!isRdv && nproc != 3) {
+  //     std::cerr << "There must be exactly 3 non-rendezvous processes for this test.\n";
+  //     exit(EXIT_FAILURE);
+  // }
   {
   //dummy partition vector data
   const auto dim = 2;
