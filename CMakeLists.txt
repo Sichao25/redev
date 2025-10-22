@@ -24,7 +24,6 @@ find_package(ADIOS2 CONFIG 2.7.1 REQUIRED)
 # If you want to build with spack see: https://github.com/jacobmerson/pcms-spack
 #add_subdirectory(external)
 find_package(perfstubs REQUIRED)
-find_package(Omega_h REQUIRED VERSION 10)
 
 set(REDEV_HEADERS
   redev.h
@@ -52,7 +51,7 @@ set(REDEV_SOURCES
 add_library(redev ${REDEV_SOURCES})
 target_compile_features(redev PUBLIC cxx_std_17)
 target_link_libraries(redev PRIVATE redev_git_version)
-target_link_libraries(redev PUBLIC adios2::adios2 Omega_h::omega_h MPI::MPI_C MPI::MPI_CXX perfstubs)
+target_link_libraries(redev PUBLIC adios2::adios2 MPI::MPI_C MPI::MPI_CXX perfstubs)
 target_compile_options(redev PRIVATE -Werror=switch)
 if(HAS_ASAN)
   target_compile_options(redev PRIVATE -fsanitize=address -fno-omit-frame-pointer)

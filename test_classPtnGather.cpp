@@ -1,5 +1,4 @@
 #include "redev.h"
-#include "Omega_h_library.hpp"
 
 //less typing...
 using MdlEntVec = redev::ClassPtn::ModelEntVec;
@@ -48,11 +47,10 @@ void test3(const int rank, const EntToRank& expectedE2R) {
 }
 
 int main(int argc, char** argv) {
-  auto lib = Omega_h::Library(&argc, &argv);
-  const auto world = lib.world();
-  const int rank = world->rank();
-  const int nproc = world->size();
-  std::cout << "Rank " << rank << " / " << nproc << std::endl;
+  int rank, nproc;
+  MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &nproc);
   REDEV_ALWAYS_ASSERT(nproc == 2);
 
   //expected result
