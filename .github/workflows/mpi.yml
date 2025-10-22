@@ -1,7 +1,7 @@
 name: mpi test
 on:
   push:
-    branches: [ yus/add_perfstubs ]
+    branches: [ main ]
 
 jobs:
   mpi-test:

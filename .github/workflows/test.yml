@@ -1,4 +1,4 @@
-name: build-test-analyze
+name: mpi test
 on:
   push:
     branches: [ yus/add_perfstubs ]
@@ -20,10 +20,11 @@ jobs:
     - name: Install mpi
       run: sudo apt-get install -yq cmake
 
-    - name: Setup MPI
-      uses: mpi4py/setup-mpi@v1
-      with:
-        mpi: mpich
+    - name: Install mpi
+      run: |
+        sudo apt-get update -yq
+        sudo apt-get purge mpich
+        sudo apt-get install -yq mpich libmpich-dev 
 
     # - name: Kokkos Checkout repo
     #   uses: actions/checkout@v3

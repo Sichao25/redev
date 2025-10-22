@@ -1,13 +1,14 @@
 name: build-test-analyze
 on:
   push:
-    branches: [ main ]
+    branches: [ main, yus/add_perfstubs ]
   pull_request:
     branches: [ main ]
   schedule:
     - cron: '23 14 * * 3'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+
 
 jobs:
   buildTestAnalyze:
@@ -36,29 +37,24 @@ jobs:
         sudo apt-get install -yq cmake
         cmake --version
         /usr/bin/cmake --version
-    - name: Install mpi
-      run: |
-        sudo apt-get update -yq
-        sudo apt-get install -yq mpich
-        which mpicc
-        which mpicxx
-        mpicc -v
-        mpicxx -v
-        which mpiexec
-        which mpirun
-        mpirun --version
-        mpiexec --version
+
+    - name: Setup MPI
+      uses: mpi4py/setup-mpi@v1
+      with:
+        mpi: mpich
+
     - name: ADIOS2 Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-adios2
 
-    # - name: Restore ADIOS2
-    #   id: restore-adios2
-    #   uses: actions/cache/restore@v3
-    #   with:
-    #     path: ${{runner.workspace}}/build-adios2/install
-    #     key: adios2-${{env.adios_version}}-${{ matrix.compiler.CC }}
+    - name: Restore ADIOS2
+      id: restore-adios2
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{runner.workspace}}/build-adios2/install
+        key: adios2-${{env.adios_version}}-${{ matrix.compiler.CC }}
 
     - name: ADIOS2 Checkout repo
+      if: steps.restore-adios2.outputs.cache-hit != 'true'
       uses: actions/checkout@v3
       with:
         repository: ornladios/adios2
@@ -66,6 +62,7 @@ jobs:
         ref: ${{env.adios_version}}
 
     - name: ADIOS2 Configure CMake
+      if: steps.restore-adios2.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{runner.workspace}}/build-adios2
       run: /usr/bin/cmake $GITHUB_WORKSPACE/adios2
@@ -81,54 +78,63 @@ jobs:
            -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-adios2/install
 
     - name: ADIOS2 Build
+      if: steps.restore-adios2.outputs.cache-hit != 'true'
       working-directory: ${{runner.workspace}}/build-adios2
       shell: bash
       run: |
         /usr/bin/cmake --build . --parallel 2
         /usr/bin/cmake --install .
-    # - name: Save ADIOS2
-    #   id: save-adios2
-    #   uses: actions/cache/save@v3
-    #   with:
-    #     path: ${{runner.workspace}}/build-adios2/install
-    #     key: ${{ steps.restore-adios2.outputs.cache-primary-key }}
+
+    - name: Save ADIOS2
+      id: save-adios2
+      uses: actions/cache/save@v3
+      with:
+        path: ${{runner.workspace}}/build-adios2/install
+        key: ${{ steps.restore-adios2.outputs.cache-primary-key }}
 
     - name: perfstubs Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-perfstubs
 
-    # - name: Restore perfstubs
-    #   id: restore-perfstubs
-    #   uses: actions/cache/restore@v3
-    #   with:
-    #     path: ${{runner.workspace}}/build-perfstubs/install
-    #     key: perfstubs-${{ matrix.compiler.CC }}
+    - name: Restore perfstubs
+      id: restore-perfstubs
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{runner.workspace}}/build-perfstubs/install
+        key: perfstubs-${{ matrix.compiler.CC }}
 
     - name: perfstubs Checkout repo
+      if: steps.restore-perfstubs.outputs.cache-hit != 'true'
       uses: actions/checkout@v3
       with:
         repository: UO-OACISS/perfstubs
         path: perfstubs
 
     - name: perfstubs Configure CMake
+      if: steps.restore-perfstubs.outputs.cache-hit != 'true'
       shell: bash
       working-directory: ${{runner.workspace}}/build-perfstubs
       run: |
            /usr/bin/cmake $GITHUB_WORKSPACE/perfstubs \
             -DCMAKE_CXX_COMPILER=mpicxx \
             -DCMAKE_INSTALL_PREFIX=${{runner.workspace}}/build-perfstubs/install
+
     - name: perfstubs Build
+      if: steps.restore-perfstubs.outputs.cache-hit != 'true'
       working-directory: ${{runner.workspace}}/build-perfstubs
       shell: bash
       run: |
         /usr/bin/cmake --build . --parallel 2
         /usr/bin/cmake --install .
+        ls -la
+        ls -la ${{runner.workspace}}/build-perfstubs/install
+        ls -la ${{runner.workspace}}/build-perfstubs/install/lib
 
-    # - name: Save perfstubs
-    #   id: save-perfstubs
-    #   uses: actions/cache/save@v3
-    #   with:
-    #     path: ${{runner.workspace}}/build-perfstubs/install
-    #     key: ${{ steps.restore-perfstubs.outputs.cache-primary-key }}
+    - name: Save perfstubs
+      id: save-perfstubs
+      uses: actions/cache/save@v3
+      with:
+        path: ${{runner.workspace}}/build-perfstubs/install
+        key: ${{ steps.restore-perfstubs.outputs.cache-primary-key }}
 
     - name: Redev Checkout repo
       uses: actions/checkout@v3
@@ -138,36 +144,18 @@ jobs:
     - name: Redev Create Build Environment
       run: /usr/bin/cmake -E make_directory ${{runner.workspace}}/build-redev
 
-    - name: Show mpicxx version
-      shell: bash
-      working-directory: ${{runner.workspace}}/build-redev
-      run: |
-        mpicxx -v
-        mpicc -v
-        which mpiexec
-        which mpirun
-        mpirun --version
-        mpiexec --version
-        echo $LD_LIBRARY_PATH
-        echo $PATH
-        echo $CMAKE_PREFIX_PATH
-
     - name: Redev Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build-redev
-      run: |
-        /usr/bin/mpicxx --version
-        /usr/bin/mpicc --version
-        update-alternatives --display mpi
-        /usr/bin/cmake $GITHUB_WORKSPACE/redev \
-          -DCMAKE_CXX_COMPILER=$(which mpicxx) \
-          -DCMAKE_CC_COMPILER=$(which mpicc) \
-          -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
-          -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
-          -DADIOS2_HAVE_SST=ON \
-          -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls \
-          -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/ \
-          -DBUILD_TESTING=ON
+      run: /usr/bin/cmake $GITHUB_WORKSPACE/redev
+           -DCMAKE_CXX_COMPILER=mpicxx
+           -DCMAKE_CC_COMPILER=mpicc
+           -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+           -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/
+           -DADIOS2_HAVE_SST=ON
+           -DADIOS2_BPLS_PATH=${{runner.workspace}}/build-adios2/install/bin/bpls
+           -Dperfstubs_DIR=${{runner.workspace}}/build-perfstubs/install/lib/cmake/
+           -DBUILD_TESTING=ON
 
     # Initializes the CodeQL tools for scanning.  This must be done before the code is built.
     #- name: Initialize CodeQL
@@ -188,4 +176,3 @@ jobs:
       run: ctest --timeout 10 --output-on-failure
       
     #- name: Perform CodeQL Analysis
-    #  uses: github/codeql-action/analyze@v2
