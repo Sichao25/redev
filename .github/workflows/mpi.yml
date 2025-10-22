@@ -8,10 +8,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install MPICH
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y mpich
+      # - name: Install MPICH
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y mpich
+      - name: Setup MPI
+        uses: mpi4py/setup-mpi@v1
+        with:
+          mpi: mpich
+
       - name: Build MPI program
         run: |
           mpicc test_mpi.c -o test_mpi
