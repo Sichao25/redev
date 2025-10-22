@@ -14,9 +14,7 @@ jobs:
           sudo apt-get install -y mpich
       - name: Build MPI program
         run: |
-          ls -la
           mpicc test_mpi.c -o test_mpi
       - name: Run MPI
         run: |
-          export HYDRA_LAUNCHER=fork
           mpirun -n 2 ./test_mpi
