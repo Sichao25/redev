@@ -5,13 +5,13 @@ on:
 
 jobs:
   mpi-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install MPICH
         run: |
           sudo apt-get update
-          sudo apt-get install -y mpich libmpich-dev
+          sudo apt-get install -y openmpi-bin libopenmpi-dev
       # - name: Setup MPI
       #   uses: mpi4py/setup-mpi@v1
       #   with:
