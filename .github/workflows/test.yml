@@ -24,7 +24,7 @@ jobs:
       run: |
         sudo apt-get update -yq
         sudo apt-get purge mpich
-        sudo apt-get install -yq mpich libmpich-dev 
+        sudo apt-get install -yq openmpi-bin libopenmpi-dev
 
     # - name: Kokkos Checkout repo
     #   uses: actions/checkout@v3
