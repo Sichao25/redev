@@ -1,6 +1,6 @@
 #!/bin/bash -x
-[[ $# != 10 && $# != 14 && $# != 20 ]] && \
-  echo "Usage: <run command> <process flag> <name0> <procs0> <exe0> <args0> ... <name2> <procs2> <exe2> <args2>" && \
+[[ $# != 11 && $# != 15 && $# != 21 ]] && \
+  echo "Usage: <run command> <process flag> <preflags> <name0> <procs0> <exe0> <args0> ... <name2> <procs2> <exe2> <args2>" && \
   exit 1
 runCmd=${1}
 preFlags=${2}
