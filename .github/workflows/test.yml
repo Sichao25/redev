@@ -18,12 +18,12 @@ jobs:
       run: sudo apt-get update
 
     - name: Install mpi
-      run: sudo apt-get install -yq cmake mpich libmpich-dev
+      run: sudo apt-get install -yq cmake
 
-    # - name: Install mpi
-    #   run: |
-    #     sudo apt-get update -yq
-    #     sudo apt-get install -yq openmpi-bin libopenmpi-dev
+    - name: Install mpi
+      run: |
+        sudo apt-get update -yq
+        sudo apt-get install -yq openmpi-bin libopenmpi-dev
 
     # - name: Kokkos Checkout repo
     #   uses: actions/checkout@v3
@@ -149,6 +149,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=$(which mpicxx) \
           -DCMAKE_C_COMPILER=$(which mpicc) \
           -DMPIEXEC_EXECUTABLE=$(which mpirun)\
+          -DMPIEXEC_PREFLAGS="--oversubscribe" \
           -DCMAKE_BUILD_TYPE=${{matrix.build_type}} \
           -DADIOS2_DIR=${{runner.workspace}}/build-adios2/install/lib/cmake/adios2/ \
           -DADIOS2_HAVE_SST=ON \
