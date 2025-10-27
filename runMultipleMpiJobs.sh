@@ -14,7 +14,7 @@ run() {
   local exe=${3}
   local args=${4}
   IFS=';' read -a argsArray <<< "${args}" #split the cmake list of args
-  ${runCmd} --oversubscribe ${numProcsFlag} ${procs} ${exe} ${argsArray[@]} &> ${name}.log &
+  ${runCmd} ${numProcsFlag} ${procs} ${exe} ${argsArray[@]} &> ${name}.log &
   PIDS+=($!)
   LOGS+=(${name}.log)
 }
