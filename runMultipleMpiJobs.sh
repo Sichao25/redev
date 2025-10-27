@@ -3,18 +3,17 @@
   echo "Usage: <run command> <process flag> <name0> <procs0> <exe0> <args0> ... <name2> <procs2> <exe2> <args2>" && \
   exit 1
 runCmd=${1}
-numProcsFlag=${2}
-shift 2
+preFlags=${2}
+numProcsFlag=${3}
+shift 3
 
-declare -a PIDS
-declare -a LOGS
 run() {
   local name=${1}
   local procs=${2}
   local exe=${3}
   local args=${4}
   IFS=';' read -a argsArray <<< "${args}" #split the cmake list of args
-  ${runCmd} ${numProcsFlag} ${procs} ${exe} ${argsArray[@]} &> ${name}.log &
+  ${runCmd} ${preFlags} ${numProcsFlag} ${procs} ${exe} ${argsArray[@]} &> ${name}.log &
   PIDS+=($!)
   LOGS+=(${name}.log)
 }
